@@ -1,2 +1,2 @@
-"# httpgateway" 
-依赖于 PHP SWOOLE 
+# 微信网关系统
+## 基于PHP的微信网关系统，运行于nuix内核服务器（包括树莓派），使用 PHP7+SWOOLE强力驱动。
