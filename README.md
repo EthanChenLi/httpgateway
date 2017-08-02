@@ -10,3 +10,9 @@
 
 ###### 使用方法
 <pre><code>php server.php</code></pre>
+
+###### 配置说明
+<pre><code>
+
+
+</code></pre>
