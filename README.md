@@ -35,7 +35,7 @@
 </pre>
 
 ###### 安装花生壳 
-phddns start（启动）| stop（停止）| restart（重启）
+phddns start（启动）| stop（停止）| restart（重启） <br/>
 需要自行注册： http://hsk.oray.com/  <br/>
 开通内网穿透，设置为本机ip 端口
 <pre>
