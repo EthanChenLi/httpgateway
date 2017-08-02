@@ -7,3 +7,6 @@
 + 树莓派debian、Ubuntu、其他nuix内核系统
 + swoole 1.9X
 + 花生壳
+
+###### 使用方法
+<pre><code>php server.php</code></pre>
