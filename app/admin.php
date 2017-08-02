@@ -4,10 +4,12 @@
  * User: ethanchan
  * Date: 2017/7/28
  * Time: 15:14
+ * author Ethan <touch_789@163.com>
  */
 class Admin{
 
-    private $dataPath = "data//data.json"; //数据存储保存路径
+    private $dataPath = APP_PATH."/data/data.json"; //数据存储保存路径
+    private $confPath =APP_PATH."/data/conf.json";
 
     public function __construct($req,$res)
     {
@@ -19,8 +21,8 @@ class Admin{
 
 
     public function index(){
-         $this->public->tpl();
-
+       
+        return $this->public->tpl();
     }
 
 
@@ -120,7 +122,7 @@ class Admin{
         }
     }
 
-
+    //删除请求
     public function del(){
         $id = $this->req->post['id'];
         $data = file_get_contents($this->dataPath);
@@ -133,6 +135,42 @@ class Admin{
             }
         }
         file_put_contents($this->dataPath,json_encode($data));
+    }
+
+    //全局设置
+    public function setting(){
+        if(!empty($this->req->post['appid'])){
+            $data['appid'] = $this->req->post['appid'];
+            $data['secret'] = $this->req->post['secret'];
+            $data['token'] = $this->req->post['token'];
+            if(!empty($this->req->post['verify'])){
+                $data['verify']=1;
+            }else{
+                 $data['verify']=0;
+            }
+            $result =file_put_contents($this->confPath,json_encode($data));
+            if($result){
+                return json_encode([
+                    'status'=>1,
+                    'info'=>'设置成功'
+                ]);
+            }else{
+                return json_encode([
+                    'status'=>0,
+                    'info'=>'设置失败'
+                ]);
+            }
+        }else{
+           $this->public->tpl("setting");  
+        } 
+    }
+
+    //拉取配送信息
+    public function getsetting(){
+        $file=  file_get_contents($this->confPath);
+        return !empty($file)?$file:json_encode([]);
+            
+            
     }
 
 

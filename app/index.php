@@ -4,39 +4,37 @@
  * User: ethanchan
  * Date: 2017/7/27
  * Time: 18:04
+ * author Ethan <touch_789@163.com>
  */
 
 class Index{
 
-    private $dataPath = "data//data.json"; //数据存储保存路径
-    private $confPath = "config//conf.php";//配置文件
+    private $dataPath = APP_PATH."/data/data.json"; //数据存储保存路径
+    private $confPath = APP_PATH."/data/conf.json";//配置文件
     private $options ;
 
     public function __construct($option)
     {
         $this->req = $option;
-        isset($this->options) || $this->options = require_once $this->confPath;
-        
+        $this->optionsjson = json_decode(file_get_contents($this->confPath),true);
     }
 
-
-
-    // 将响应输出
-    public function valid(){
-        $get =$this->req->get;
-        return $get['echostr'];
-    }
-
-
+    //入口方法
     public function index(){
-         //return $this->valid(); //认证
+        if($this->optionsjson['verify'] == 1)
+            return $this->valid(); //认证
         $post =$this->req->rawContent();//请求的XML内容
-
         $content = $this->_xmlToArray($post);
         if($content['MsgType'] == 'voice')
             return $this->_check($content);
     }
 
+
+     // 将响应输出
+    private function valid(){
+        $get =$this->req->get;
+        return $get['echostr'];
+    }
     //处理方法
     private function _check($content){
         $msg =$content['Recognition'];
@@ -44,7 +42,6 @@ class Index{
         $msg= $this->_sendcommon($str,$content);
         return  $this->_replayText($content['FromUserName'],$content['ToUserName'],$msg);
     }
-
 
     //发送指令
     private function _sendcommon($str,$content){
@@ -75,21 +72,15 @@ class Index{
                             $msg = $infoJson['content'];
                         }
                 }
-
-
                 print PHP_EOL."请求地址: ".$api.PHP_EOL;
-                
             }else{
                 $msg ="无效的指令: ".$str;
             }
-
             print $msg.PHP_EOL;
-        
             return $msg;
         }
     }
-
-
+    //回复文本
     public function _replayText($to,$from,$msg){
         $html ="<xml>";
         $html.="<ToUserName><![CDATA[{$to}]]></ToUserName>";
@@ -100,7 +91,6 @@ class Index{
         $html.="</xml>";
         return $html;
     }
-
 
     private  function _xmlToArray($xml)
     {

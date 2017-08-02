@@ -4,6 +4,7 @@
  * User: ethanchan
  * Date: 2017/7/28
  * Time: 15:26
+ * author Ethan <touch_789@163.com>
  */
 class Common {
 
@@ -12,12 +13,12 @@ class Common {
         $this->res=$res;
     }
 
-    private $path = ".//view//";
+    private $path = APP_PATH."/view/";
     public function tpl($name="index"){
-         $file =$this->path.$name.".html";
-        \swoole_async_readfile($file, function($filename, $content) {
+          $file =$this->path.$name.".html";
+         \swoole_async_readfile($file, function($filename, $content) {
            $this->res->end($content);
-        });
+         });
     }
 
 

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Admin</title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" type="text/css" href="http://cdn.amazeui.org/amazeui/2.7.2/css/amazeui.min.css">
+	<link rel="stylesheet" type="text/css" href="http://s.amazeui.org/assets/2.x/css/amaze.min.css?v=ivneioml">
+	<script src="http://cdn.bootcss.com/jquery/2.2.4/jquery.min.js"></script>
+	<script src="http://cdn.bootcss.com/layer/3.0.1/layer.min.js"></script>
+	<link rel="stylesheet" href="http://cdn.bootcss.com/layer/3.0.1/mobile/need/layer.min.css" media="all">
+
+</head>
+<body data-amui="2.x">
+	
+<div class="amz-banner">
+	<div class="amz-container am-scrollspy-init am-scrollspy-inview am-animation-scale-up" data-am-scrollspy="{animation: 'scale-up', repeat: false}">
+		<h1>Ruffer</h1>
+		<p>微信网关系统</p>
+	</div>
+</div>
+<section class="" id="amz-main" data-tag="css-table">
+<div class="am-g am-g-fixed">
+
+<div class="am-panel am-panel-default">
+  <div class="am-panel-hd">提示</div>
+  <div class="am-panel-bd">
+    <p>微信认证地址：http://DOMAIN:[PORT]/ （公网地址）</p>
+    * 微信接口配置验证通过后请关闭验证选项。
+  </div>
+</div>
+	<form class="am-form">
+		<fieldset>
+			<legend>设置列表</legend>
+
+			<div class="am-form-group">
+				<label for="path">APPID</label>
+				<input type="email" class="" id="appid" name="appid" value="" placeholder="微信appid">
+			</div>
+			<div class="am-form-group">
+				<label for="path">SECRET</label>
+				<input type="email" class="" id="secret" name="secret" value="" placeholder="微信secret">
+			</div>
+			<div class="am-form-group">
+				<label for="path">TOKEN</label>
+				<input type="email" class="" id="token" name="token" value="" placeholder="微信token">
+			</div>
+
+			<div class="am-checkbox">
+		      <label>
+		        <input type="checkbox"  value="1" id="verify" name="verify"> 微信验证
+		      </label>
+		    </div>				
+			<p><button type="button" id="btn" class="am-btn am-btn-success">提交</button></p>
+		</fieldset>
+	</form>
+</div>
+</section>
+
+</body>
+<script>
+
+	$(function(){
+
+		$.ajax({
+		type:'GET',
+		url:"/admin/getsetting",
+		dataType:"JSON",
+		beforeSend:function(){
+			layer.load(1, {
+				shade: [0.1,'#fff'] //0.1透明度的白色背景
+			});
+		},
+		success:function(data){
+			layer.closeAll();
+			$("#appid").val(data.appid);
+			$("#secret").val(data.secret);
+			$("#token").val(data.token);
+			if(data.verify == 1){
+				$("#verify").attr('checked','true');
+			}
+
+		}
+	})
+
+		$("#btn").click(function(){
+			$.ajax({
+				type:"POST",
+				url:"/admin/setting",
+				data:$("form").serialize(),
+				dataType:"JSON",
+				beforeSend:function(){
+					layer.load(1, {
+						shade: [0.1,'#fff'] //0.1透明度的白色背景
+					});
+				},
+				success:function(data){
+					layer.closeAll();
+					window.location.reload();
+				}
+			})
+		})
+})
+	
+
+
+</script>
+</html>
