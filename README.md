@@ -11,7 +11,7 @@
 ###### 使用方法
 <pre><code>php server.php</code></pre>
 
-程序默认端口为 8090
+程序默认端口为 8090   <br/>
 配置更改：server.php
 - - -
 
@@ -36,7 +36,7 @@
 
 ###### 安装花生壳 
 phddns start（启动）| stop（停止）| restart（重启）
-需要自行注册： http://hsk.oray.com/ 
+需要自行注册： http://hsk.oray.com/  <br/>
 开通内网穿透，设置为本机ip 端口
 <pre>
 	<code>
