@@ -12,17 +12,16 @@
 </head>
 <body data-amui="2.x">
 	<header id="amz-header">
-	<div class="amz-container am-cf">
+<div class="amz-container am-cf">
 	<button class="am-btn am-btn-primary am-show-sm-only" data-am-collapse="{target: '.amz-header-nav'}"><span class="am-sr-only">导航切换</span><span class="am-icon-bars"></span></button><nav>
 	<ul class="amz-header-nav am-collapse">
 		<li ><a  href="/admin/index">请求列表</a></li>
-		<li class="am-active"><a href="/admin/setting">全局配置</a></li>
-
-		<li ><a  href="/admin/tick">定时任务</a></li>
+		<li><a href="/admin/setting">全局配置</a></li>
+		<li class="am-active"><a  href="/admin/tick">定时任务</a></li>
 	</ul>
 	</nav>
 </div>
-</header>	
+</header>
 <div class="amz-banner">
 	<div class="amz-container am-scrollspy-init am-scrollspy-inview am-animation-scale-up" data-am-scrollspy="{animation: 'scale-up', repeat: false}">
 		<h1>Ruffer</h1>
@@ -31,36 +30,30 @@
 </div>
 <section class="" id="amz-main" data-tag="css-table">
 <div class="am-g am-g-fixed">
-
-<div class="am-panel am-panel-default">
-  <div class="am-panel-hd">提示</div>
-  <div class="am-panel-bd">
-    <p>微信认证地址：http://DOMAIN:[PORT]/ （公网地址）</p>
-    * 微信接口配置验证通过后请关闭验证选项。
-  </div>
-</div>
 	<form class="am-form">
 		<fieldset>
-			<legend>设置列表</legend>
+			<legend>设置任务</legend>
 
 			<div class="am-form-group">
-				<label for="path">APPID</label>
-				<input type="email" class="" id="appid" name="appid" value="" placeholder="微信appid">
-			</div>
-			<div class="am-form-group">
-				<label for="path">SECRET</label>
-				<input type="email" class="" id="secret" name="secret" value="" placeholder="微信secret">
-			</div>
-			<div class="am-form-group">
-				<label for="path">TOKEN</label>
-				<input type="email" class="" id="token" name="token" value="" placeholder="微信token">
+				<label for="path">请求地址</label>
+				<input type="email" class="" id="path" name="path" value="" placeholder="目标机的地址，http://IP:[PORT]/PATH">
 			</div>
 
-			<div class="am-checkbox">
-		      <label>
-		        <input type="checkbox"  value="1" id="verify" name="verify"> 微信验证
-		      </label>
-		    </div>				
+			<div class="am-form-group">
+				<label for="title">任务名称</label>
+				<input type="text" class="" id="title" name="title" value="" >
+			</div>
+
+			<div class="am-form-group">
+				<label for="timer">循环周期</label>
+				<input type="text" class="" id="timer" name="timer" value="" placeholder="单位：毫秒 , 1000毫秒=1秒">
+			</div>
+
+			<div class="am-form-group">
+				<label for="loop">循环次数</label>
+				<input type="text" class="" id="loop" name="loop" value="" placeholder="填 0 则为无限循环任务，最高1亿">
+			</div>	
+				<input type="hidden" name="id" id="id" value="" />
 			<p><button type="button" id="btn" class="am-btn am-btn-success">提交</button></p>
 		</fieldset>
 	</form>
@@ -71,47 +64,56 @@
 <script>
 
 	$(function(){
-
-		$.ajax({
-		type:'GET',
-		url:"/admin/getsetting",
-		dataType:"JSON",
-		beforeSend:function(){
-			layer.load(1, {
-				shade: [0.1,'#fff'] //0.1透明度的白色背景
-			});
-		},
-		success:function(data){
-			layer.closeAll();
-			$("#appid").val(data.appid);
-			$("#secret").val(data.secret);
-			$("#token").val(data.token);
-			if(data.verify == 1){
-				$("#verify").attr('checked','true');
-			}
-
-		}
-	})
-
 		$("#btn").click(function(){
 			$.ajax({
 				type:"POST",
-				url:"/admin/setting",
+				url:"/admin/check_tick",
 				data:$("form").serialize(),
 				dataType:"JSON",
-				beforeSend:function(){
-					layer.load(1, {
-						shade: [0.1,'#fff'] //0.1透明度的白色背景
-					});
-				},
 				success:function(data){
-					layer.closeAll();
-					window.location.reload();
+					layer.msg(data.info);
+					window.location.href="/admin/tick";
 				}
 			})
 		})
-})
-	
+
+	})
+
+	function GetUrlPara()
+	{
+		var url = document.location.toString();
+		var arrUrl = url.split("?");
+		var para = arrUrl[1];
+		return para;
+	}
+	var param =GetUrlPara();
+	if(typeof(param)!="undefined"){
+		$.ajax({
+			type:'GET',
+			url:"/admin/getdata_tick",
+			data:param,
+			dataType:"JSON",
+			beforeSend:function(){
+				layer.load(1, {
+					shade: [0.1,'#fff'] //0.1透明度的白色背景
+				});
+			},
+			success:function(data){
+				layer.closeAll();
+				if(data.status == 1){
+					$("#path").val(data.data.path);
+					$("#title").val(data.data.title);
+					$("#id").val(data.data.id);
+					$("#timer").val(data.data.timer);
+					$("#loop").val(data.data.loop);
+				}else{
+					layer.msg(data.info);
+				}
+			}
+		})
+
+
+	}
 
 
 </script>

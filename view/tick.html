@@ -16,9 +16,9 @@
 <div class="amz-container am-cf">
 	<button class="am-btn am-btn-primary am-show-sm-only" data-am-collapse="{target: '.amz-header-nav'}"><span class="am-sr-only">导航切换</span><span class="am-icon-bars"></span></button><nav>
 	<ul class="amz-header-nav am-collapse">
-		<li class="am-active"><a  href="/admin/index">请求列表</a></li>
+		<li ><a  href="/admin/index">请求列表</a></li>
 		<li><a href="/admin/setting">全局配置</a></li>
-		<li ><a  href="/admin/tick">定时任务</a></li>
+		<li class="am-active"><a  href="/admin/tick">定时任务</a></li>
 	</ul>
 	</nav>
 </div>
@@ -32,16 +32,19 @@
 
 <section class="" id="amz-main" data-tag="css-table">
 <div class="am-g am-g-fixed">
-	<a href="/admin/info">
-		<button type="button" class="am-btn am-btn-primary">添加请求</button>
+	<a href="/admin/info_tick">
+		<button type="button" class="am-btn am-btn-primary">添加任务</button>
 	</a>
 	
 	<table class="am-table">
 	    <thead>
 	        <tr>
 	            <th>ID</th>
+	            <th>名称</th>
 	            <th>请求地址</th>
-	            <th>关键字</th>
+	            <th>循环周期</th>
+	            <th>循环次数</th>
+	            <th>执行状态</th>
 				<th>操作</th>
 	        </tr>
 	    </thead>
@@ -70,25 +73,35 @@
 	$(function(){
 		$.ajax({
 			type:"POST",
-			url:"/admin/getdata",
+			url:"/admin/getdata_tick",
 			success:function(data){
 				$("#content").append(data);
 			}
 		})
 	})
 
-	function del(id){
 
+	function getmission(id){
+
+	   layer.confirm('确定要执行本次请求吗？', {
+			btn: ['确定','取消'] //按钮
+		}, function(){
+			$.post("/admin/tick_mission",{id:id},function(){
+				window.location.reload();
+			})
+		});
+
+	}
+
+
+	function del(id){
 		layer.confirm('确定要删除该条吗？', {
 			btn: ['确定','取消'] //按钮
 		}, function(){
 
-			$.post("/admin/del",{id:id},function(){
+			$.post("/admin/del",{id:id,type:'tick'},function(){
 				window.location.reload();
 			})
-
-
-
 		});
 
 	}
